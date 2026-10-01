@@ -114,11 +114,22 @@ h1 { font-size: 1.35rem; line-height: 1.25; margin: 0 0 4px; }
 [hidden] { display: none !important; }
 @media (prefers-reduced-motion: reduce) { .fill { transition: none; } }
 </style>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\(', '\)']],
+        displayMath: [['\[', '\]']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 <main>
   <h1>Matrizes: verificação de leitura</h1>
   <p class="sub">26 perguntas sobre o tópico 1 dos apontamentos. Sem contas pesadas.</p>
+  <p class="disclaimer"><strong>Nota:</strong> Este quiz foi elaborado com recurso a inteligência artificial e revisto pelo autor.</p>
 
   <section id="quiz">
     <div class="meta"><span id="count"></span><span id="score"></span></div>
@@ -188,7 +199,12 @@ const Q = [
     e: "A transposta de uma matriz m×n é n×m: as linhas passam a colunas e vice-versa." },
 
   { p: "Qual destas matrizes 2×2 é simétrica (isto é, A = Aᵀ)? (Cada matriz é dada pelas suas linhas.)",
-    o: ["(1, 2) e (2, 5)", "(1, 2) e (3, 5)", "(1, 2) e (−2, 1)", "(0, 1) e (0, 0)"],
+    o: [
+      "\(\begin{pmatrix}1 & 2\\2 & 5\end{pmatrix}\)",
+      "\(\begin{pmatrix}1 & 2\\3 & 5\end{pmatrix}\)",
+      "\(\begin{pmatrix}1 & 2\\-2 & 1\end{pmatrix}\)",
+      "\(\begin{pmatrix}0 & 1\\0 & 0\end{pmatrix}\)"
+    ],
     e: "Uma matriz é simétrica quando aᵢⱼ = aⱼᵢ. Na primeira opção, a₁₂ = a₂₁ = 2." },
 
   { p: "Sejam A uma matriz 3×4 e B uma matriz 4×2. Qual das afirmações é verdadeira?",
@@ -199,14 +215,14 @@ const Q = [
     e: "O produto de uma matriz m×p por uma p×n só existe se as dimensões interiores coincidirem, e dá uma matriz m×n. AB é (3×4)(4×2) = 3×2. BA seria (4×2)(3×4), e 2 ≠ 3." },
 
   { p: "Seja A uma matriz m×p. Qual das seguintes matrizes verifica A·I = A?",
-    o: ["Iₚ", "Iₘ", "Iₘ₊ₚ", "A matriz nula Oₘₚ"],
+    o: ["Iₚxₘ", "Iₘxₚ", "Iₘ₊ₚ", "A matriz nula Oₘₚ"],
     e: "Para multiplicar (m×p) por algo e obter de novo m×p, esse algo tem de ser p×p; a identidade é, portanto, Iₚ. (À esquerda, Iₘ·A = A.)" },
 
   { p: "Sejam A e B matrizes quadradas de ordem n. Qual das igualdades é válida em geral?",
     o: ["(AB)ᵀ = BᵀAᵀ", "(AB)ᵀ = AᵀBᵀ", "AB = BA", "(AB)⁻¹ = A⁻¹B⁻¹"],
     e: "Transposta e inversa de um produto invertem a ordem dos fatores: (AB)ᵀ = BᵀAᵀ e (AB)⁻¹ = B⁻¹A⁻¹. E o produto de matrizes não é comutativo em geral." },
 
-  { p: "Porque é que o conjunto das matrizes quadradas de ordem n, com a soma e o produto, é um anel não comutativo?",
+  { p: "Porque é que o conjunto das matrizes quadradas de ordem n, com a soma e o produto, é um grupo não comutativo?",
     o: ["Porque, em geral, AB ≠ BA",
         "Porque a soma de matrizes não é comutativa",
         "Porque nem todas as matrizes têm inversa",
@@ -335,7 +351,7 @@ function render() {
   $('count').textContent = 'Pergunta ' + (idx + 1) + ' de ' + queue.length;
   $('score').textContent = 'Certas: ' + score;
   $('bar').style.width = (idx / queue.length * 100) + '%';
-  $('prompt').textContent = q.p;
+  $('prompt').innerHTML = q.p;
   current = shuffle(q.o.map((t, k) => ({ t: t, ok: k === 0 })));
   const box = $('options');
   box.textContent = '';
@@ -344,13 +360,14 @@ function render() {
     b.type = 'button';
     b.className = 'opt';
     const L = document.createElement('span'); L.className = 'letter'; L.textContent = 'ABCD'[k];
-    const T = document.createElement('span'); T.className = 'otext'; T.textContent = o.t;
+    const T = document.createElement('span'); T.className = 'otext'; T.innerHTML = o.t;
     const M = document.createElement('span'); M.className = 'mark'; M.setAttribute('aria-hidden', 'true');
     b.append(L, T, M);
     b.addEventListener('click', () => answer(k));
     box.appendChild(b);
   });
   $('feedback').hidden = true;
+  if (window.MathJax) MathJax.typesetPromise();
 }
 
 function answer(k) {
@@ -369,10 +386,11 @@ function answer(k) {
   else { wrong.push({ q: q, chosen: chosen.t }); }
   $('score').textContent = 'Certas: ' + score;
   $('verdict').textContent = chosen.ok ? 'Certo.' : 'Não é essa.';
-  $('explain').textContent = q.e;
+  $('explain').innerHTML = q.e;
   $('next').textContent = idx === queue.length - 1 ? 'Ver resultado' : 'Seguinte';
   $('feedback').hidden = false;
   $('bar').style.width = ((idx + 1) / queue.length * 100) + '%';
+  if (window.MathJax) MathJax.typesetPromise();
   $('next').focus();
 }
 
