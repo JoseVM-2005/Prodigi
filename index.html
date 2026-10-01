@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Matrizes: quiz de verificação de leitura</title>
+
 <style>
 :root {
   --bg: #f7f7f5;
@@ -21,6 +22,7 @@
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
+
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #15171a;
@@ -36,6 +38,7 @@
     --bad-border: #e0645f;
   }
 }
+
 :root[data-theme="dark"] {
   --bg: #15171a;
   --surface: #1e2125;
@@ -49,8 +52,15 @@
   --bad-bg: #3a1c1b;
   --bad-border: #e0645f;
 }
-html { scroll-padding-top: env(safe-area-inset-top, 0px); }
-*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   background: var(--bg);
@@ -59,278 +69,656 @@ body {
   font-size: 17px;
   line-height: 1.5;
 }
-main { max-width: 640px; margin: 0 auto; padding: 20px 16px 40px; }
-h1 { font-size: 1.35rem; line-height: 1.25; margin: 0 0 4px; }
-.sub { color: var(--muted); font-size: 0.9rem; margin: 0 0 20px; }
-.meta { display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--muted); margin-bottom: 6px; }
-.track { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-bottom: 20px; }
-.fill { height: 100%; width: 0; background: var(--accent); transition: width 0.25s ease; }
-.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 18px; }
-#prompt { font-size: 1.15rem; font-weight: 600; line-height: 1.4; margin: 0 0 16px; }
-#options { display: grid; gap: 10px; }
+
+main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+}
+
+h1 {
+  font-size: 1.35rem;
+  line-height: 1.25;
+  margin: 0 0 4px;
+}
+
+.sub {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0 0 8px;
+}
+
+.disclaimer {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  margin: 0 0 20px;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.track {
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.fill {
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+  transition: width 0.25s ease;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 18px;
+}
+
+#prompt {
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0 0 16px;
+}
+
+#options {
+  display: grid;
+  gap: 10px;
+}
+
 .opt {
-  display: flex; align-items: flex-start; gap: 12px;
-  width: 100%; text-align: left;
-  font: inherit; color: var(--text);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: var(--text);
   background: var(--surface);
   border: 1.5px solid var(--border);
   border-radius: 10px;
   padding: 12px 14px;
   cursor: pointer;
 }
-.opt:hover:not(:disabled) { border-color: var(--accent); }
-.opt:disabled { cursor: default; color: var(--text); opacity: 1; }
-.opt:focus-visible, .btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.opt:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.opt:disabled {
+  cursor: default;
+  color: var(--text);
+  opacity: 1;
+}
+
+.opt:focus-visible,
+.btn:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
 .letter {
-  flex: none; width: 1.7em; height: 1.7em; border-radius: 50%;
+  flex: none;
+  width: 1.7em;
+  height: 1.7em;
+  border-radius: 50%;
   border: 1.5px solid var(--border);
-  display: inline-flex; align-items: center; justify-content: center;
-  font-size: 0.85rem; font-weight: 600; color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
 }
-.otext { flex: 1; overflow-wrap: anywhere; }
-.mark { flex: none; font-weight: 700; }
-.opt.ok { background: var(--ok-bg); border-color: var(--ok-border); }
-.opt.bad { background: var(--bad-bg); border-color: var(--bad-border); }
-.opt.ok .mark { color: var(--ok-border); }
-.opt.bad .mark { color: var(--bad-border); }
-#feedback { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
-#verdict { font-weight: 700; margin: 0 0 4px; }
-#explain { margin: 0 0 16px; color: var(--text); }
+
+.otext {
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+
+.mark {
+  flex: none;
+  font-weight: 700;
+}
+
+.opt.ok {
+  background: var(--ok-bg);
+  border-color: var(--ok-border);
+}
+
+.opt.bad {
+  background: var(--bad-bg);
+  border-color: var(--bad-border);
+}
+
+.opt.ok .mark {
+  color: var(--ok-border);
+}
+
+.opt.bad .mark {
+  color: var(--bad-border);
+}
+
+#feedback {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+#verdict {
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+
+#explain {
+  margin: 0 0 16px;
+  color: var(--text);
+}
+
 .btn {
-  font: inherit; font-weight: 600;
-  background: var(--accent); color: var(--accent-text);
-  border: 0; border-radius: 10px; padding: 11px 20px; cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  background: var(--accent);
+  color: var(--accent-text);
+  border: 0;
+  border-radius: 10px;
+  padding: 11px 20px;
+  cursor: pointer;
 }
-.btn.secondary { background: transparent; color: var(--text); border: 1.5px solid var(--border); }
-.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
-#result h2 { margin: 0 0 4px; font-size: 1.4rem; }
-.big { font-size: 2.2rem; font-weight: 700; margin: 0 0 4px; }
-.review { margin-top: 20px; display: grid; gap: 12px; }
-.review h3 { font-size: 1rem; margin: 0; }
-.rev-item { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; background: var(--surface); }
-.rev-item p { margin: 0 0 6px; }
-.rev-item .you { color: var(--bad-border); }
-.rev-item .right { color: var(--ok-border); margin-bottom: 0; }
-[hidden] { display: none !important; }
-@media (prefers-reduced-motion: reduce) { .fill { transition: none; } }
+
+.btn.secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1.5px solid var(--border);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+#result h2 {
+  margin: 0 0 4px;
+  font-size: 1.4rem;
+}
+
+.big {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+
+.review {
+  margin-top: 20px;
+  display: grid;
+  gap: 12px;
+}
+
+.review h3 {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.rev-item {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: var(--surface);
+}
+
+.rev-item p {
+  margin: 0 0 6px;
+}
+
+.rev-item .you {
+  color: var(--bad-border);
+}
+
+.rev-item .right {
+  color: var(--ok-border);
+  margin-bottom: 0;
+}
+
+.matrix {
+  margin: 6px 0;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fill {
+    transition: none;
+  }
+}
 </style>
-  <script>
-    window.MathJax = {
-      tex: {
-        inlineMath: [['\(', '\)']],
-        displayMath: [['\[', '\]']]
-      },
-      svg: { fontCache: 'global' }
-    };
-  </script>
-  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+<!-- MathJax -->
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(', '\\)']],
+    displayMath: [['\\[', '\\]']]
+  },
+  svg: {
+    fontCache: 'global'
+  }
+};
+</script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
 </head>
+
 <body>
+
 <main>
+
   <h1>Matrizes: verificação de leitura</h1>
-  <p class="sub">26 perguntas sobre o tópico 1 dos apontamentos. Sem contas pesadas.</p>
-  <p class="disclaimer"><strong>Nota:</strong> Este quiz foi elaborado com recurso a inteligência artificial e revisto pelo autor.</p>
+
+  <p class="sub">
+    26 perguntas sobre o tópico 1 dos apontamentos. Sem contas pesadas.
+  </p>
+
+  <p class="disclaimer">
+    <strong>Nota:</strong> Este quiz foi elaborado com recurso a inteligência artificial e revisto pelo autor.
+  </p>
 
   <section id="quiz">
-    <div class="meta"><span id="count"></span><span id="score"></span></div>
-    <div class="track" aria-hidden="true"><div class="fill" id="bar"></div></div>
-    <div class="card">
-      <p id="prompt"></p>
-      <div id="options"></div>
-      <div id="feedback" hidden aria-live="polite">
-        <p id="verdict"></p>
-        <p id="explain"></p>
-        <button type="button" class="btn" id="next"></button>
-      </div>
+
+    <div class="meta">
+      <span id="count"></span>
+      <span id="score"></span>
     </div>
+
+    <div class="track" aria-hidden="true">
+      <div class="fill" id="bar"></div>
+    </div>
+
+    <div class="card">
+
+      <p id="prompt"></p>
+
+      <div id="options"></div>
+
+      <div id="feedback" hidden aria-live="polite">
+
+        <p id="verdict"></p>
+
+        <p id="explain"></p>
+
+        <button type="button" class="btn" id="next"></button>
+
+      </div>
+
+    </div>
+
   </section>
+
 
   <section id="result" hidden>
+
     <div class="card">
+
       <h2>Resultado</h2>
+
       <p class="big" id="final"></p>
+
       <p id="finalMsg"></p>
+
       <div class="actions">
-        <button type="button" class="btn" id="retryWrong" hidden>Refazer só as que errei</button>
-        <button type="button" class="btn secondary" id="restart">Recomeçar tudo</button>
+
+        <button type="button" class="btn" id="retryWrong" hidden>
+          Refazer só as que errei
+        </button>
+
+        <button type="button" class="btn secondary" id="restart">
+          Recomeçar tudo
+        </button>
+
       </div>
+
     </div>
+
     <div class="review" id="review"></div>
+
   </section>
+
 </main>
 
+
 <script>
-// Em cada pergunta, a primeira opção é a correta; as opções são baralhadas ao mostrar.
+
+// Em cada pergunta, a primeira opção é a correta;
+// as opções são baralhadas ao mostrar.
+
 const Q = [
-  { p: "Formalmente, o que é uma matriz m×n sobre um corpo K?",
-    o: ["Uma função que a cada par (i, j), com i ≤ m e j ≤ n, associa um elemento de K",
-        "Um número obtido a partir de uma soma de n! produtos de elementos",
-        "Um conjunto de m·n elementos de K, sem qualquer ordem",
-        "Uma lista de vetores linha, sem colunas"],
-    e: "Pela Definição 1, uma matriz é uma função com domínio I(m,n) (os pares (i, j)) e imagem em K. A imagem do par (i, j) é o elemento aᵢⱼ. A segunda opção descreve um determinante." },
 
-  { p: "Como se chama uma matriz de tipo m×1?",
-    o: ["Matriz coluna", "Matriz linha", "Matriz escalar", "Matriz quadrada"],
-    e: "Uma matriz 1×n é uma matriz linha; uma matriz m×1 é uma matriz coluna." },
-
-  { p: "Qual das afirmações sobre matrizes quadradas está correta?",
-    o: ["A matriz identidade é um caso particular de matriz escalar",
-        "Toda a matriz diagonal é escalar",
-        "Toda a matriz escalar é a matriz identidade",
-        "Uma matriz diagonal não pode ter elementos principais nulos"],
-    e: "Hierarquia: identidade ⊂ escalar ⊂ diagonal. A identidade é a escalar com r = 1. Uma diagonal pode ter elementos principais diferentes entre si (ou nulos); uma escalar pode ter r ≠ 1." },
-
-  { p: "O que significa uma matriz quadrada ser triangular superior?",
-    o: ["Todos os elementos abaixo da diagonal principal são nulos (aᵢⱼ = 0 para i > j)",
-        "Todos os elementos acima da diagonal principal são nulos",
-        "Todos os elementos fora da diagonal principal são nulos",
-        "Todos os elementos da diagonal principal são nulos"],
-    e: "Triangular superior: aᵢⱼ = 0 para i > j (zeros abaixo da diagonal). Triangular inferior: aᵢⱼ = 0 para i < j. Se for as duas coisas ao mesmo tempo, é diagonal." },
-
-  { p: "Quando é que duas matrizes A e B são iguais?",
-    o: ["Quando têm o mesmo tipo e os elementos correspondentes são iguais",
-        "Quando têm o mesmo número de elementos",
-        "Quando a soma dos seus elementos é a mesma",
-        "Quando têm a mesma característica"],
-    e: "É preciso o mesmo tipo (m×n) e aᵢⱼ = bᵢⱼ para todo o par (i, j). Uma matriz 2×3 e uma 3×2 têm o mesmo número de elementos, mas não são do mesmo tipo." },
-
-  { p: "Se A é uma matriz de tipo 2×5, qual é o tipo de Aᵀ?",
-    o: ["5×2", "2×5", "5×5", "2×2"],
-    e: "A transposta de uma matriz m×n é n×m: as linhas passam a colunas e vice-versa." },
-
-  { p: "Qual destas matrizes 2×2 é simétrica (isto é, A = Aᵀ)? (Cada matriz é dada pelas suas linhas.)",
+  {
+    p: "Formalmente, o que é uma matriz m×n sobre um corpo K?",
     o: [
-      "\(\begin{pmatrix}1 & 2\\2 & 5\end{pmatrix}\)",
-      "\(\begin{pmatrix}1 & 2\\3 & 5\end{pmatrix}\)",
-      "\(\begin{pmatrix}1 & 2\\-2 & 1\end{pmatrix}\)",
-      "\(\begin{pmatrix}0 & 1\\0 & 0\end{pmatrix}\)"
+      "Uma função que a cada par (i, j), com i ≤ m e j ≤ n, associa um elemento de K",
+      "Um número obtido a partir de uma soma de n! produtos de elementos",
+      "Um conjunto de m·n elementos de K, sem qualquer ordem",
+      "Uma lista de vetores linha, sem colunas"
     ],
-    e: "Uma matriz é simétrica quando aᵢⱼ = aⱼᵢ. Na primeira opção, a₁₂ = a₂₁ = 2." },
+    e: "Pela Definição 1, uma matriz é uma função com domínio I(m,n) (os pares (i, j)) e imagem em K. A imagem do par (i, j) é o elemento aᵢⱼ. A segunda opção descreve um determinante."
+  },
 
-  { p: "Sejam A uma matriz 3×4 e B uma matriz 4×2. Qual das afirmações é verdadeira?",
-    o: ["AB é uma matriz 3×2 e BA não pode ser efetuado",
-        "AB é 4×4 e BA é 2×3",
-        "AB e BA estão ambas definidas, mas são diferentes",
-        "AB não pode ser efetuado, mas BA é uma matriz 2×3"],
-    e: "O produto de uma matriz m×p por uma p×n só existe se as dimensões interiores coincidirem, e dá uma matriz m×n. AB é (3×4)(4×2) = 3×2. BA seria (4×2)(3×4), e 2 ≠ 3." },
+  {
+    p: "Como se chama uma matriz de tipo m×1?",
+    o: [
+      "Matriz coluna",
+      "Matriz linha",
+      "Matriz escalar",
+      "Matriz quadrada"
+    ],
+    e: "Uma matriz 1×n é uma matriz linha; uma matriz m×1 é uma matriz coluna."
+  },
 
-  { p: "Seja A uma matriz m×p. Qual das seguintes matrizes verifica A·I = A?",
-    o: ["Iₚxₘ", "Iₘxₚ", "Iₘ₊ₚ", "A matriz nula Oₘₚ"],
-    e: "Para multiplicar (m×p) por algo e obter de novo m×p, esse algo tem de ser p×p; a identidade é, portanto, Iₚ. (À esquerda, Iₘ·A = A.)" },
+  {
+    p: "Qual das afirmações sobre matrizes quadradas está correta?",
+    o: [
+      "A matriz identidade é um caso particular de matriz escalar",
+      "Toda a matriz diagonal é escalar",
+      "Toda a matriz escalar é a matriz identidade",
+      "Uma matriz diagonal não pode ter elementos principais nulos"
+    ],
+    e: "Hierarquia: identidade ⊂ escalar ⊂ diagonal. A identidade é a escalar com r = 1. Uma diagonal pode ter elementos principais diferentes entre si (ou nulos); uma escalar pode ter r ≠ 1."
+  },
 
-  { p: "Sejam A e B matrizes quadradas de ordem n. Qual das igualdades é válida em geral?",
-    o: ["(AB)ᵀ = BᵀAᵀ", "(AB)ᵀ = AᵀBᵀ", "AB = BA", "(AB)⁻¹ = A⁻¹B⁻¹"],
-    e: "Transposta e inversa de um produto invertem a ordem dos fatores: (AB)ᵀ = BᵀAᵀ e (AB)⁻¹ = B⁻¹A⁻¹. E o produto de matrizes não é comutativo em geral." },
+  {
+    p: "O que significa uma matriz quadrada ser triangular superior?",
+    o: [
+      "Todos os elementos abaixo da diagonal principal são nulos (aᵢⱼ = 0 para i > j)",
+      "Todos os elementos acima da diagonal principal são nulos",
+      "Todos os elementos fora da diagonal principal são nulos",
+      "Todos os elementos da diagonal principal são nulos"
+    ],
+    e: "Triangular superior: aᵢⱼ = 0 para i > j (zeros abaixo da diagonal). Triangular inferior: aᵢⱼ = 0 para i < j. Se for as duas coisas ao mesmo tempo, é diagonal."
+  },
 
-  { p: "Porque é que o conjunto das matrizes quadradas de ordem n, com a soma e o produto, é um grupo não comutativo?",
-    o: ["Porque, em geral, AB ≠ BA",
-        "Porque a soma de matrizes não é comutativa",
-        "Porque nem todas as matrizes têm inversa",
-        "Porque o produto de matrizes não é associativo"],
-    e: "A soma é comutativa e o produto é associativo. O que falha é a comutatividade do produto." },
+  {
+    p: "Quando é que duas matrizes A e B são iguais?",
+    o: [
+      "Quando têm o mesmo tipo e os elementos correspondentes são iguais",
+      "Quando têm o mesmo número de elementos",
+      "Quando a soma dos seus elementos é a mesma",
+      "Quando têm a mesma característica"
+    ],
+    e: "É preciso o mesmo tipo (m×n) e aᵢⱼ = bᵢⱼ para todo o par (i, j). Uma matriz 2×3 e uma 3×2 têm o mesmo número de elementos, mas não são do mesmo tipo."
+  },
 
-  { p: "Uma matriz invertível A tem quantas matrizes inversas?",
-    o: ["Exatamente uma", "Pelo menos duas", "Infinitas", "Depende da ordem de A"],
-    e: "Se existe uma matriz A⁻¹ tal que AA⁻¹ = A⁻¹A = Iₙ, essa matriz é única." },
+  {
+    p: "Se A é uma matriz de tipo 2×5, qual é o tipo de Aᵀ?",
+    o: [
+      "5×2",
+      "2×5",
+      "5×5",
+      "2×2"
+    ],
+    e: "A transposta de uma matriz m×n é n×m: as linhas passam a colunas e vice-versa."
+  },
 
-  { p: "Sendo A invertível e r ≠ 0, quanto vale (rA)⁻¹?",
-    o: ["r⁻¹A⁻¹", "rA⁻¹", "−rA⁻¹", "A⁻¹ (o escalar desaparece)"],
-    e: "(rA)(r⁻¹A⁻¹) = (r·r⁻¹)(AA⁻¹) = Iₙ, logo (rA)⁻¹ = r⁻¹A⁻¹." },
+  {
+    p: "Qual destas matrizes 2×2 é simétrica (isto é, A = Aᵀ)?",
+    o: [
+      String.raw`\(\begin{pmatrix}1 & 2\\2 & 5\end{pmatrix}\)`,
+      String.raw`\(\begin{pmatrix}1 & 2\\3 & 5\end{pmatrix}\)`,
+      String.raw`\(\begin{pmatrix}1 & 2\\-2 & 1\end{pmatrix}\)`,
+      String.raw`\(\begin{pmatrix}0 & 1\\0 & 0\end{pmatrix}\)`
+    ],
+    e: "Uma matriz é simétrica quando aᵢⱼ = aⱼᵢ. Na primeira opção, a₁₂ = a₂₁ = 2."
+  },
 
-  { p: "Uma matriz quadrada A de ordem 4 tem car A = 3. O que se pode concluir?",
-    o: ["A não é invertível",
-        "A é invertível",
-        "A é invertível se tiver todos os elementos principais não nulos",
-        "Nada, é preciso calcular o determinante"],
-    e: "Uma matriz quadrada de ordem n é invertível se e só se car A = n (Proposição 2). Aqui 3 < 4, logo A não é invertível." },
+  {
+    p: "Sejam A uma matriz 3×4 e B uma matriz 4×2. Qual das afirmações é verdadeira?",
+    o: [
+      "AB é uma matriz 3×2 e BA não pode ser efetuado",
+      "AB é 4×4 e BA é 2×3",
+      "AB e BA estão ambas definidas, mas são diferentes",
+      "AB não pode ser efetuado, mas BA é uma matriz 2×3"
+    ],
+    e: "O produto de uma matriz m×p por uma p×n só existe se as dimensões interiores coincidirem, e dá uma matriz m×n. AB é (3×4)(4×2) = 3×2. BA seria (4×2)(3×4), e 2 ≠ 3."
+  },
 
-  { p: "Numa matriz em forma de escada, o que é o pivot de uma linha não nula?",
-    o: ["O primeiro elemento não nulo da linha (a contar da esquerda)",
-        "O maior elemento da linha",
-        "O elemento da diagonal principal que pertence a essa linha",
-        "O último elemento não nulo da linha"],
-    e: "O pivot é o primeiro elemento não nulo da linha. Não tem de estar na diagonal principal; o que se exige é que os elementos abaixo e à esquerda do pivot sejam nulos." },
+  {
+    p: "Seja A uma matriz m×p. Qual das seguintes matrizes verifica A·I = A?",
+    o: [
+      "Iₚ",
+      "Iₘ",
+      "Iₘ₊ₚ",
+      "A matriz nula Oₘₚ"
+    ],
+    e: "Para multiplicar (m×p) por algo e obter de novo m×p, esse algo tem de ser p×p; a identidade é, portanto, Iₚ. (À esquerda, Iₘ·A = A.)"
+  },
 
-  { p: "Qual das seguintes NÃO é uma operação elementar sobre as linhas de uma matriz?",
-    o: ["Multiplicar uma linha por zero",
-        "Trocar duas linhas entre si",
-        "Multiplicar uma linha por um número diferente de zero",
-        "Substituir uma linha pela sua soma com outra linha"],
-    e: "Multiplicar uma linha por zero destrói informação (não se pode desfazer) e pode alterar a característica e o conjunto de soluções de um sistema. Por isso a operação (b) exige um escalar diferente de zero." },
+  {
+    p: "Sejam A e B matrizes quadradas de ordem n. Qual das igualdades é válida em geral?",
+    o: [
+      "(AB)ᵀ = BᵀAᵀ",
+      "(AB)ᵀ = AᵀBᵀ",
+      "AB = BA",
+      "(AB)⁻¹ = A⁻¹B⁻¹"
+    ],
+    e: "Transposta e inversa de um produto invertem a ordem dos fatores: (AB)ᵀ = BᵀAᵀ e (AB)⁻¹ = B⁻¹A⁻¹. E o produto de matrizes não é comutativo em geral."
+  },
 
-  { p: "As operações elementares sobre as linhas de uma matriz alteram a sua característica?",
-    o: ["Não, pois equivalem a combinações lineares e não afetam a (in)dependência linear",
-        "Sim, porque mudam os elementos da matriz",
-        "Sim, mas só a troca de linhas",
-        "Só se a matriz não for quadrada"],
-    e: "As operações (a), (b) e (c) não alteram a (in)dependência linear das linhas, logo a característica mantém-se. É por isso que se pode calculá-la a partir de uma forma de escada." },
+  {
+    p: "Porque é que o conjunto das matrizes quadradas de ordem n, com a soma e o produto, é um grupo não comutativo?",
+    o: [
+      "Porque, em geral, AB ≠ BA",
+      "Porque a soma de matrizes não é comutativa",
+      "Porque nem todas as matrizes têm inversa",
+      "Porque o produto de matrizes não é associativo"
+    ],
+    e: "A soma é comutativa e o produto é associativo. O que falha é a comutatividade do produto."
+  },
 
-  { p: "Qual destas matrizes 3×3 está em forma de escada? (Cada matriz é dada pelas suas linhas.)",
-    o: ["(1, 2, 0) / (0, 0, 3) / (0, 0, 0)",
-        "(0, 0, 0) / (1, 2, 3) / (0, 0, 4)",
-        "(1, 2, 3) / (0, 1, 4) / (0, 2, 5)",
-        "(0, 1, 2) / (1, 0, 3) / (0, 0, 0)"],
-    e: "Na segunda opção, a linha nula não está no fim. Na terceira, há um elemento não nulo abaixo do pivot da 2.ª linha. Na quarta, o pivot da 2.ª linha está mais à esquerda do que o da 1.ª." },
+  {
+    p: "Uma matriz invertível A tem quantas matrizes inversas?",
+    o: [
+      "Exatamente uma",
+      "Pelo menos duas",
+      "Infinitas",
+      "Depende da ordem de A"
+    ],
+    e: "Se existe uma matriz A⁻¹ tal que AA⁻¹ = A⁻¹A = Iₙ, essa matriz é única."
+  },
 
-  { p: "O que distingue a forma condensada de uma simples forma de escada?",
-    o: ["Todos os pivots são iguais a 1 e cada pivot é o único elemento não nulo da sua coluna",
-        "As linhas nulas estão no fim da matriz",
-        "Os elementos abaixo de cada pivot são nulos",
-        "A matriz tem de ser quadrada"],
-    e: "As condições sobre as linhas nulas e sobre os elementos abaixo dos pivots já são da forma de escada. A condensada exige ainda pivots iguais a 1 e zeros também acima de cada pivot." },
+  {
+    p: "Sendo A invertível e r ≠ 0, quanto vale (rA)⁻¹?",
+    o: [
+      "r⁻¹A⁻¹",
+      "rA⁻¹",
+      "−rA⁻¹",
+      "A⁻¹ (o escalar desaparece)"
+    ],
+    e: "(rA)(r⁻¹A⁻¹) = (r·r⁻¹)(AA⁻¹) = Iₙ, logo (rA)⁻¹ = r⁻¹A⁻¹."
+  },
 
-  { p: "De uma mesma matriz A, usando operações elementares sobre linhas, quantas formas de escada e quantas formas condensadas se podem obter?",
-    o: ["Várias formas de escada e uma única forma condensada",
-        "Uma só de cada",
-        "Uma única forma de escada e várias condensadas",
-        "Várias de cada"],
-    e: "Há liberdade na escolha das operações, por isso existem várias formas de escada. A forma condensada é única (Proposição 1)." },
+  {
+    p: "Uma matriz quadrada A de ordem 4 tem car A = 3. O que se pode concluir?",
+    o: [
+      "A não é invertível",
+      "A é invertível",
+      "A é invertível se tiver todos os elementos principais não nulos",
+      "Nada, é preciso calcular o determinante"
+    ],
+    e: "Uma matriz quadrada de ordem n é invertível se e só se car A = n (Proposição 2). Aqui 3 < 4, logo A não é invertível."
+  },
 
-  { p: "No método de eliminação de Gauss, o que se obtém no fim da eliminação descendente (antes da ascendente)?",
-    o: ["Uma forma de escada da matriz",
-        "A forma condensada da matriz",
-        "A matriz inversa",
-        "A matriz transposta"],
-    e: "A eliminação descendente anula os elementos abaixo de cada pivot e dá uma forma de escada. A normalização dos pivots e a eliminação ascendente (anular os elementos acima dos pivots) levam depois à forma condensada." },
+  {
+    p: "Numa matriz em forma de escada, o que é o pivot de uma linha não nula?",
+    o: [
+      "O primeiro elemento não nulo da linha (a contar da esquerda)",
+      "O maior elemento da linha",
+      "O elemento da diagonal principal que pertence a essa linha",
+      "O último elemento não nulo da linha"
+    ],
+    e: "O pivot é o primeiro elemento não nulo da linha. Não tem de estar na diagonal principal; o que se exige é que os elementos abaixo e à esquerda do pivot sejam nulos."
+  },
 
-  { p: "A forma condensada de uma matriz A (4×3) tem linhas (1, 0, 3), (0, 1, 4), (0, 0, 0) e (0, 0, 0). Qual é a característica de A?",
-    o: ["2", "3", "4", "0"],
-    e: "A característica é o número de linhas não nulas de uma forma de escada. A condensada tem 2 linhas não nulas, logo car A = 2." },
+  {
+    p: "Qual das seguintes NÃO é uma operação elementar sobre as linhas de uma matriz?",
+    o: [
+      "Multiplicar uma linha por zero",
+      "Trocar duas linhas entre si",
+      "Multiplicar uma linha por um número diferente de zero",
+      "Substituir uma linha pela sua soma com outra linha"
+    ],
+    e: "Multiplicar uma linha por zero destrói informação (não se pode desfazer) e pode alterar a característica e o conjunto de soluções de um sistema. Por isso a operação (b) exige um escalar diferente de zero."
+  },
 
-  { p: "Qual é a característica da matriz nula Oₘₙ?",
-    o: ["0", "1", "m", "min{m, n}"],
-    e: "A matriz nula não tem linhas não nulas, logo car = 0 (o caso p = 0 da definição)." },
+  {
+    p: "As operações elementares sobre as linhas de uma matriz alteram a sua característica?",
+    o: [
+      "Não, pois equivalem a combinações lineares e não afetam a (in)dependência linear",
+      "Sim, porque mudam os elementos da matriz",
+      "Sim, mas só a troca de linhas",
+      "Só se a matriz não for quadrada"
+    ],
+    e: "As operações (a), (b) e (c) não alteram a (in)dependência linear das linhas, logo a característica mantém-se. É por isso que se pode calculá-la a partir de uma forma de escada."
+  },
 
-  { p: "Qual é o maior valor possível para a característica de uma matriz 3×5?",
-    o: ["3", "5", "8", "15"],
-    e: "car A ≤ min{m, n}. Uma matriz 3×5 tem 3 linhas, logo no máximo 3 linhas não nulas numa forma de escada." },
+  {
+    p: "Qual destas matrizes 3×3 está em forma de escada?",
+    o: [
+      String.raw`\(\begin{pmatrix}1 & 2 & 0\\0 & 0 & 3\\0 & 0 & 0\end{pmatrix}\)`,
+      String.raw`\(\begin{pmatrix}0 & 0 & 0\\1 & 2 & 3\\0 & 0 & 4\end{pmatrix}\)`,
+      String.raw`\(\begin{pmatrix}1 & 2 & 3\\0 & 1 & 4\\0 & 2 & 5\end{pmatrix}\)`,
+      String.raw`\(\begin{pmatrix}0 & 1 & 2\\1 & 0 & 3\\0 & 0 & 0\end{pmatrix}\)`
+    ],
+    e: "Na segunda opção, a linha nula não está no fim. Na terceira, há um elemento não nulo abaixo do pivot da 2.ª linha. Na quarta, o pivot da 2.ª linha está mais à esquerda do que o da 1.ª."
+  },
 
-  { p: "O número de linhas linearmente independentes de uma matriz é sempre igual a…",
-    o: ["o número das suas colunas linearmente independentes",
-        "o número de linhas da matriz",
-        "o número de colunas da matriz",
-        "o valor do seu determinante"],
-    e: "Demonstra-se que o número de vetores linha linearmente independentes é igual ao número de vetores coluna linearmente independentes, e esse número é a característica da matriz." },
+  {
+    p: "O que distingue a forma condensada de uma simples forma de escada?",
+    o: [
+      "Todos os pivots são iguais a 1 e cada pivot é o único elemento não nulo da sua coluna",
+      "As linhas nulas estão no fim da matriz",
+      "Os elementos abaixo de cada pivot são nulos",
+      "A matriz tem de ser quadrada"
+    ],
+    e: "As condições sobre as linhas nulas e sobre os elementos abaixo dos pivots já são da forma de escada. A condensada exige ainda pivots iguais a 1 e zeros também acima de cada pivot."
+  },
 
-  { p: "Para calcular a inversa de uma matriz invertível A por condensação, o que se faz?",
-    o: ["Condensa-se [A | Iₙ] até se obter [Iₙ | A⁻¹]",
-        "Condensa-se [A | Aᵀ] até se obter [Iₙ | A⁻¹]",
-        "Condensa-se A até à forma de escada, que é A⁻¹",
-        "Condensa-se [Iₙ | A] até se obter [A⁻¹ | Iₙ]"],
-    e: "Cada coluna de A⁻¹ é a solução de um sistema AX = eⱼ (colunas da identidade). Como todos têm a mesma matriz de coeficientes, condensam-se em simultâneo: [A | I] → [I | A⁻¹]." }
+  {
+    p: "De uma mesma matriz A, usando operações elementares sobre linhas, quantas formas de escada e quantas formas condensadas se podem obter?",
+    o: [
+      "Várias formas de escada e uma única forma condensada",
+      "Uma só de cada",
+      "Uma única forma de escada e várias condensadas",
+      "Várias de cada"
+    ],
+    e: "Há liberdade na escolha das operações, por isso existem várias formas de escada. A forma condensada é única (Proposição 1)."
+  },
+
+  {
+    p: "No método de eliminação de Gauss, o que se obtém no fim da eliminação descendente (antes da ascendente)?",
+    o: [
+      "Uma forma de escada da matriz",
+      "A forma condensada da matriz",
+      "A matriz inversa",
+      "A matriz transposta"
+    ],
+    e: "A eliminação descendente anula os elementos abaixo de cada pivot e dá uma forma de escada. A normalização dos pivots e a eliminação ascendente (anular os elementos acima dos pivots) levam depois à forma condensada."
+  },
+
+  {
+    p: "A forma condensada de uma matriz A (4×3) tem linhas (1, 0, 3), (0, 1, 4), (0, 0, 0) e (0, 0, 0). Qual é a característica de A?",
+    o: [
+      "2",
+      "3",
+      "4",
+      "0"
+    ],
+    e: "A característica é o número de linhas não nulas de uma forma de escada. A condensada tem 2 linhas não nulas, logo car A = 2."
+  },
+
+  {
+    p: "Qual é a característica da matriz nula Oₘₙ?",
+    o: [
+      "0",
+      "1",
+      "m",
+      "min{m, n}"
+    ],
+    e: "A matriz nula não tem linhas não nulas, logo car = 0 (o caso p = 0 da definição)."
+  },
+
+  {
+    p: "Qual é o maior valor possível para a característica de uma matriz 3×5?",
+    o: [
+      "3",
+      "5",
+      "8",
+      "15"
+    ],
+    e: "car A ≤ min{m, n}. Uma matriz 3×5 tem 3 linhas, logo no máximo 3 linhas não nulas numa forma de escada."
+  },
+
+  {
+    p: "O número de linhas linearmente independentes de uma matriz é sempre igual a…",
+    o: [
+      "o número das suas colunas linearmente independentes",
+      "o número de linhas da matriz",
+      "o número de colunas da matriz",
+      "o valor do seu determinante"
+    ],
+    e: "Demonstra-se que o número de vetores linha linearmente independentes é igual ao número de vetores coluna linearmente independentes, e esse número é a característica da matriz."
+  },
+
+  {
+    p: "Para calcular a inversa de uma matriz invertível A por condensação, o que se faz?",
+    o: [
+      "Condensa-se [A | Iₙ] até se obter [Iₙ | A⁻¹]",
+      "Condensa-se [A | Aᵀ] até se obter [Iₙ | A⁻¹]",
+      "Condensa-se A até à forma de escada, que é A⁻¹",
+      "Condensa-se [Iₙ | A] até se obter [A⁻¹ | Iₙ]"
+    ],
+    e: "Cada coluna de A⁻¹ é a solução de um sistema AX = eⱼ (colunas da identidade). Como todos têm a mesma matriz de coeficientes, condensam-se em simultâneo: [A | I] → [I | A⁻¹]."
+  }
+
 ];
 
+
 const $ = id => document.getElementById(id);
+
+
 function shuffle(a) {
   const r = a.slice();
+
   for (let i = r.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [r[i], r[j]] = [r[j], r[i]];
   }
+
   return r;
 }
 
-let queue = [], idx = 0, score = 0, wrong = [], locked = false, current = null;
+
+let queue = [];
+let idx = 0;
+let score = 0;
+let wrong = [];
+let locked = false;
+let current = null;
+
 
 function show(name) {
   $('quiz').hidden = name !== 'quiz';
@@ -338,104 +726,276 @@ function show(name) {
   window.scrollTo(0, 0);
 }
 
+
+function typeset() {
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise();
+  }
+}
+
+
 function start(list, shuffleQuestions) {
   queue = shuffleQuestions ? shuffle(list) : list.slice();
-  idx = 0; score = 0; wrong = [];
+
+  idx = 0;
+  score = 0;
+  wrong = [];
+
   show('quiz');
   render();
 }
 
+
 function render() {
+
   const q = queue[idx];
+
   locked = false;
-  $('count').textContent = 'Pergunta ' + (idx + 1) + ' de ' + queue.length;
-  $('score').textContent = 'Certas: ' + score;
-  $('bar').style.width = (idx / queue.length * 100) + '%';
+
+  $('count').textContent =
+    'Pergunta ' + (idx + 1) + ' de ' + queue.length;
+
+  $('score').textContent =
+    'Certas: ' + score;
+
+  $('bar').style.width =
+    (idx / queue.length * 100) + '%';
+
   $('prompt').innerHTML = q.p;
-  current = shuffle(q.o.map((t, k) => ({ t: t, ok: k === 0 })));
+
+  current = shuffle(
+    q.o.map((t, k) => ({
+      t: t,
+      ok: k === 0
+    }))
+  );
+
   const box = $('options');
+
   box.textContent = '';
+
   current.forEach((o, k) => {
+
     const b = document.createElement('button');
+
     b.type = 'button';
     b.className = 'opt';
-    const L = document.createElement('span'); L.className = 'letter'; L.textContent = 'ABCD'[k];
-    const T = document.createElement('span'); T.className = 'otext'; T.innerHTML = o.t;
-    const M = document.createElement('span'); M.className = 'mark'; M.setAttribute('aria-hidden', 'true');
+
+    const L = document.createElement('span');
+    L.className = 'letter';
+    L.textContent = 'ABCD'[k];
+
+    const T = document.createElement('span');
+    T.className = 'otext';
+    T.innerHTML = o.t;
+
+    const M = document.createElement('span');
+    M.className = 'mark';
+    M.setAttribute('aria-hidden', 'true');
+
     b.append(L, T, M);
+
     b.addEventListener('click', () => answer(k));
+
     box.appendChild(b);
+
   });
+
   $('feedback').hidden = true;
-  if (window.MathJax) MathJax.typesetPromise();
+
+  typeset();
 }
 
+
 function answer(k) {
+
   if (locked) return;
+
   locked = true;
+
   const q = queue[idx];
   const box = $('options');
   const chosen = current[k];
+
   current.forEach((o, n) => {
+
     const btn = box.children[n];
+
     btn.disabled = true;
-    if (o.ok) { btn.classList.add('ok'); btn.querySelector('.mark').textContent = '✓'; }
-    else if (n === k) { btn.classList.add('bad'); btn.querySelector('.mark').textContent = '✗'; }
+
+    if (o.ok) {
+
+      btn.classList.add('ok');
+      btn.querySelector('.mark').textContent = '✓';
+
+    } else if (n === k) {
+
+      btn.classList.add('bad');
+      btn.querySelector('.mark').textContent = '✗';
+
+    }
+
   });
-  if (chosen.ok) { score++; }
-  else { wrong.push({ q: q, chosen: chosen.t }); }
-  $('score').textContent = 'Certas: ' + score;
-  $('verdict').textContent = chosen.ok ? 'Certo.' : 'Não é essa.';
+
+
+  if (chosen.ok) {
+
+    score++;
+
+  } else {
+
+    wrong.push({
+      q: q,
+      chosen: chosen.t
+    });
+
+  }
+
+
+  $('score').textContent =
+    'Certas: ' + score;
+
+  $('verdict').textContent =
+    chosen.ok ? 'Certo.' : 'Não é essa.';
+
   $('explain').innerHTML = q.e;
-  $('next').textContent = idx === queue.length - 1 ? 'Ver resultado' : 'Seguinte';
+
+  $('next').textContent =
+    idx === queue.length - 1
+      ? 'Ver resultado'
+      : 'Seguinte';
+
   $('feedback').hidden = false;
-  $('bar').style.width = ((idx + 1) / queue.length * 100) + '%';
-  if (window.MathJax) MathJax.typesetPromise();
+
+  $('bar').style.width =
+    ((idx + 1) / queue.length * 100) + '%';
+
+  typeset();
+
   $('next').focus();
 }
 
-function next() {
-  idx++;
-  if (idx >= queue.length) finish(); else render();
-}
 
-function finish() {
-  show('result');
-  const total = queue.length;
-  $('final').textContent = score + ' de ' + total;
-  const pct = score / total;
-  $('finalMsg').textContent = wrong.length === 0
-    ? 'Tudo certo.'
-    : (pct >= 0.75 ? 'Bom resultado. Revê só as que falhaste.' : 'Vale a pena voltar a ler os apontamentos e refazer as que falhaste.');
-  $('retryWrong').hidden = wrong.length === 0;
-  const rev = $('review');
-  rev.textContent = '';
-  if (wrong.length) {
-    const h = document.createElement('h3');
-    h.textContent = 'Perguntas falhadas';
-    rev.appendChild(h);
-    wrong.forEach(w => {
-      const d = document.createElement('div'); d.className = 'rev-item';
-      const p = document.createElement('p'); p.textContent = w.q.p; p.style.fontWeight = '600';
-      const y = document.createElement('p'); y.className = 'you'; y.textContent = '✗ A tua resposta: ' + w.chosen;
-      const r = document.createElement('p'); r.className = 'right'; r.textContent = '✓ Resposta certa: ' + w.q.o[0];
-      d.append(p, y, r);
-      rev.appendChild(d);
-    });
+function next() {
+
+  idx++;
+
+  if (idx >= queue.length) {
+
+    finish();
+
+  } else {
+
+    render();
+
   }
 }
 
+
+function finish() {
+
+  show('result');
+
+  const total = queue.length;
+
+  $('final').textContent =
+    score + ' de ' + total;
+
+  const pct = score / total;
+
+  $('finalMsg').textContent =
+    wrong.length === 0
+      ? 'Tudo certo.'
+      : (
+          pct >= 0.75
+            ? 'Bom resultado. Revê só as que falhaste.'
+            : 'Vale a pena voltar a ler os apontamentos e refazer as que falhaste.'
+        );
+
+
+  $('retryWrong').hidden =
+    wrong.length === 0;
+
+
+  const rev = $('review');
+
+  rev.textContent = '';
+
+
+  if (wrong.length) {
+
+    const h = document.createElement('h3');
+
+    h.textContent = 'Perguntas falhadas';
+
+    rev.appendChild(h);
+
+
+    wrong.forEach(w => {
+
+      const d = document.createElement('div');
+
+      d.className = 'rev-item';
+
+
+      const p = document.createElement('p');
+
+      p.innerHTML = w.q.p;
+      p.style.fontWeight = '600';
+
+
+      const y = document.createElement('p');
+
+      y.className = 'you';
+      y.innerHTML = '✗ A tua resposta: ' + w.chosen;
+
+
+      const r = document.createElement('p');
+
+      r.className = 'right';
+      r.innerHTML = '✓ Resposta certa: ' + w.q.o[0];
+
+
+      d.append(p, y, r);
+
+      rev.appendChild(d);
+
+    });
+
+    typeset();
+  }
+}
+
+
 $('next').addEventListener('click', next);
-$('restart').addEventListener('click', () => start(Q, true));
-$('retryWrong').addEventListener('click', () => start(wrong.map(w => w.q), false));
+
+$('restart').addEventListener(
+  'click',
+  () => start(Q, true)
+);
+
+$('retryWrong').addEventListener(
+  'click',
+  () => start(wrong.map(w => w.q), false)
+);
+
 
 document.addEventListener('keydown', e => {
+
   if ($('quiz').hidden || locked) return;
+
   const k = ['1', '2', '3', '4'].indexOf(e.key);
-  if (k >= 0 && k < current.length) answer(k);
+
+  if (k >= 0 && k < current.length) {
+    answer(k);
+  }
+
 });
 
+
 start(Q, false);
+
 </script>
+
 </body>
 </html>
