@@ -19,7 +19,11 @@
   --bad-bg: #fbe7e6;
   --bad-border: #c23b36;
   box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
+
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -248,7 +252,7 @@ window.MathJax = {
   svg: { fontCache: 'global' }
 };
 </script>
-<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
 </head>
 
 <body>
