@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Matrizes e Determinantes: verificação de leitura</title>
+
+<style>
+:root {
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --text: #1c1f24;
+  --muted: #5d6570;
+  --border: #d3d7db;
+  --accent: #2848b8;
+  --accent-text: #ffffff;
+  --ok-bg: #e3f4e8;
+  --ok-border: #2f8a4f;
+  --bad-bg: #fbe7e6;
+  --bad-border: #c23b36;
+  box-sizing: border-box;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15171a;
+    --surface: #1e2125;
+    --text: #eceef0;
+    --muted: #a0a8b2;
+    --border: #3a3f46;
+    --accent: #7c9bff;
+    --accent-text: #0e1320;
+    --ok-bg: #17301f;
+    --ok-border: #4fb26f;
+    --bad-bg: #3a1c1b;
+    --bad-border: #e0645f;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #15171a;
+  --surface: #1e2125;
+  --text: #eceef0;
+  --muted: #a0a8b2;
+  --border: #3a3f46;
+  --accent: #7c9bff;
+  --accent-text: #0e1320;
+  --ok-bg: #17301f;
+  --ok-border: #4fb26f;
+  --bad-bg: #3a1c1b;
+  --bad-border: #e0645f;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+}
+
+h1 {
+  font-size: 1.35rem;
+  line-height: 1.25;
+  margin: 0 0 4px;
+}
+
+.sub {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0 0 8px;
+}
+
+.disclaimer {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  margin: 0 0 20px;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.track {
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.fill {
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+  transition: width 0.25s ease;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 18px;
+}
+
+#prompt {
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0 0 16px;
+}
+
+#options {
+  display: grid;
+  gap: 10px;
+}
+
+.opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+}
+
+.opt:hover:not(:disabled) { border-color: var(--accent); }
+
+.opt:disabled {
+  cursor: default;
+  color: var(--text);
+  opacity: 1;
+}
+
+.opt:focus-visible, .btn:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.letter {
+  flex: none;
+  width: 1.7em;
+  height: 1.7em;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.otext {
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+
+.mark { flex: none; font-weight: 700; }
+
+.opt.ok { background: var(--ok-bg); border-color: var(--ok-border); }
+.opt.bad { background: var(--bad-bg); border-color: var(--bad-border); }
+.opt.ok .mark { color: var(--ok-border); }
+.opt.bad .mark { color: var(--bad-border); }
+
+#feedback {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+#verdict { font-weight: 700; margin: 0 0 4px; }
+#explain { margin: 0 0 16px; color: var(--text); }
+
+.btn {
+  font: inherit;
+  font-weight: 600;
+  background: var(--accent);
+  color: var(--accent-text);
+  border: 0;
+  border-radius: 10px;
+  padding: 11px 20px;
+  cursor: pointer;
+}
+
+.btn.secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1.5px solid var(--border);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+#result h2 { margin: 0 0 4px; font-size: 1.4rem; }
+.big { font-size: 2.2rem; font-weight: 700; margin: 0 0 4px; }
+.review { margin-top: 20px; display: grid; gap: 12px; }
+.review h3 { font-size: 1rem; margin: 0; }
+
+.rev-item {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: var(--surface);
+}
+
+.rev-item p { margin: 0 0 6px; }
+.rev-item .you { color: var(--bad-border); }
+.rev-item .right { color: var(--ok-border); margin-bottom: 0; }
+
+[hidden] { display: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fill { transition: none; }
+}
+</style>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(', '\\)']],
+    displayMath: [['\\[', '\\]']]
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+
+<body>
+<main>
+  <h1>Matrizes e determinantes: verificação de leitura</h1>
+  <p class="sub">Classificação de sistemas, matrizes inversas e determinantes. Foco nos conceitos e nas propriedades.</p>
+  <p class="disclaimer"><strong>Nota:</strong> Este quiz foi elaborado com recurso a inteligência artificial e revisto pelo autor.</p>
+
+  <section id="quiz">
+    <div class="meta"><span id="count"></span><span id="score"></span></div>
+    <div class="track" aria-hidden="true"><div class="fill" id="bar"></div></div>
+    <div class="card">
+      <p id="prompt"></p>
+      <div id="options"></div>
+      <div id="feedback" hidden aria-live="polite">
+        <p id="verdict"></p>
+        <p id="explain"></p>
+        <button type="button" class="btn" id="next"></button>
+      </div>
+    </div>
+  </section>
+
+  <section id="result" hidden>
+    <div class="card">
+      <h2>Resultado</h2>
+      <p class="big" id="final"></p>
+      <p id="finalMsg"></p>
+      <div class="actions">
+        <button type="button" class="btn" id="retryWrong" hidden>Refazer só as que errei</button>
+        <button type="button" class="btn secondary" id="restart">Recomeçar tudo</button>
+      </div>
+    </div>
+    <div class="review" id="review"></div>
+  </section>
+</main>
+
+<script>
+
+// A primeira opção de cada pergunta é a correta.
+// As opções são baralhadas automaticamente.
+
+const Q = [
+
+  // 2.3 — Classificação de sistemas
+
+  {
+    p: "Quais são as três classificações possíveis de um sistema de equações lineares?",
+    o: [
+      "Possível e determinado, possível e indeterminado, impossível",
+      "Invertível, singular e diagonal",
+      "Linear, quadrático e indeterminado",
+      "Compatível, triangular e impossível"
+    ],
+    e: "Um sistema possível e determinado tem uma única solução; um sistema possível e indeterminado tem infinitas soluções; um sistema impossível não tem solução."
+  },
+
+  {
+    p: "Considere um sistema AX = B com n incógnitas. Qual é o critério para o sistema ser possível e determinado?",
+    o: [
+      "car A = car[A|B] = n",
+      "car A < car[A|B]",
+      "car A = car[A|B] < n",
+      "det A = 0, independentemente das dimensões"
+    ],
+    e: "O sistema tem uma única solução se e só se a característica da matriz dos coeficientes e a da matriz completa forem ambas iguais ao número n de incógnitas."
+  },
+
+  {
+    p: "Para um sistema AX = B com n incógnitas, quando é possível e indeterminado?",
+    o: [
+      "Quando car A = car[A|B] < n",
+      "Quando car A = car[A|B] = n",
+      "Quando car A < car[A|B]",
+      "Quando car A > n"
+    ],
+    e: "As características iguais garantem compatibilidade. Se forem inferiores ao número de incógnitas, há variáveis livres e infinitas soluções."
+  },
+
+  {
+    p: "Qual é o critério para um sistema AX = B ser impossível?",
+    o: [
+      "car A < car[A|B]",
+      "car A = car[A|B] = n",
+      "car A = car[A|B] < n",
+      "car A = n"
+    ],
+    e: "Se a característica da matriz completa for superior à da matriz dos coeficientes, surge uma incompatibilidade entre as equações."
+  },
+
+  {
+    p: "Por que razão a matriz completa [A|B] é útil na classificação de um sistema?",
+    o: [
+      "Porque comparar car A com car[A|B] permite determinar a natureza do sistema sem calcular explicitamente todas as soluções",
+      "Porque a matriz completa é sempre quadrada",
+      "Porque car[A|B] é sempre igual ao número de incógnitas",
+      "Porque o determinante de [A|B] indica sempre o número de soluções"
+    ],
+    e: "A eliminação de Gauss permite obter as características de A e de [A|B]. A sua comparação determina se o sistema é possível e, se for, se tem uma ou infinitas soluções."
+  },
+
+  {
+    p: "Um sistema tem 4 incógnitas e verifica car A = car[A|B] = 3. O que se conclui?",
+    o: [
+      "É possível e indeterminado",
+      "É possível e determinado",
+      "É impossível",
+      "Não é possível tirar qualquer conclusão"
+    ],
+    e: "As características são iguais, logo o sistema é compatível. Como são inferiores a 4, existem variáveis livres e infinitas soluções."
+  },
+
+  {
+    p: "Um sistema tem car A = 2 e car[A|B] = 3. Qual é a sua classificação?",
+    o: [
+      "Impossível",
+      "Possível e determinado",
+      "Possível e indeterminado",
+      "Invertível"
+    ],
+    e: "Como car A < car[A|B], o sistema é incompatível: não existe nenhuma solução."
+  },
+
+  // 2.4 — Cálculo da inversa por condensação
+
+  {
+    p: "Para calcular a inversa de uma matriz quadrada A por condensação, que matriz aumentada se deve construir?",
+    o: [
+      String.raw`\([A\mid I_n]\)`,
+      String.raw`\([A\mid A^T]\)`,
+      String.raw`\([I_n\mid A^T]\)`,
+      String.raw`\([A\mid 0]\)`
+    ],
+    e: "Junta-se a matriz identidade à direita de A e aplicam-se operações elementares às linhas até obter [Iₙ|A⁻¹]."
+  },
+
+  {
+    p: "O que se pretende obter ao condensar [A|Iₙ], quando A é invertível?",
+    o: [
+      String.raw`\([I_n\mid A^{-1}]\)`,
+      String.raw`\([A^{-1}\mid I_n]\)`,
+      String.raw`\([I_n\mid A^T]\)`,
+      String.raw`\([A\mid A^{-1}]\)`
+    ],
+    e: "As operações elementares transformam o bloco esquerdo A em Iₙ e, simultaneamente, o bloco direito Iₙ em A⁻¹."
+  },
+
+  {
+    p: "Por que razão o método [A|Iₙ] → [Iₙ|A⁻¹] calcula a inversa?",
+    o: [
+      "Porque cada coluna da inversa resolve o sistema Ax = eᵢ correspondente à coluna eᵢ da identidade",
+      "Porque a inversa é sempre igual à transposta",
+      "Porque as operações elementares preservam todos os elementos de A",
+      "Porque basta trocar as colunas de A"
+    ],
+    e: "A igualdade AA⁻¹ = Iₙ significa que cada coluna de A⁻¹ é a solução de um sistema com matriz dos coeficientes A e termo independente igual a uma coluna de Iₙ."
+  },
+
+  {
+    p: "O que acontece se, ao tentar condensar [A|Iₙ], não for possível transformar o bloco esquerdo em Iₙ?",
+    o: [
+      "A matriz A não é invertível",
+      "A inversa é necessariamente Aᵀ",
+      "A matriz A é necessariamente a identidade",
+      "A matriz A tem de ser triangular"
+    ],
+    e: "Uma matriz quadrada é invertível se e só se tiver característica máxima. Se não for possível obter Iₙ por operações elementares, A é singular e não tem inversa."
+  },
+
+  {
+    p: "Se A é invertível, qual é a solução do sistema AX = B?",
+    o: [
+      String.raw`\(X=A^{-1}B\)`,
+      String.raw`\(X=AB^{-1}\)`,
+      String.raw`\(X=A^TB\)`,
+      String.raw`\(X=B^{-1}A\)`
+    ],
+    e: "Multiplicando AX = B à esquerda por A⁻¹, obtém-se A⁻¹AX = A⁻¹B, ou seja, X = A⁻¹B."
+  },
+
+  {
+    p: "Um sistema AX = B tem A quadrada e invertível. Qual das afirmações é necessariamente verdadeira?",
+    o: [
+      "O sistema tem uma única solução para qualquer B compatível em dimensão",
+      "O sistema nunca tem solução",
+      "O sistema tem sempre infinitas soluções",
+      "O sistema só tem solução se B for a matriz nula"
+    ],
+    e: "Como A é invertível, X = A⁻¹B é uma solução única para qualquer vetor B de dimensão adequada."
+  },
+
+  // 3.1–3.4 — Definição e cálculo de determinantes
+
+  {
+    p: "A que tipo de matriz se pode associar um determinante?",
+    o: [
+      "A uma matriz quadrada",
+      "A qualquer matriz retangular",
+      "A qualquer vetor coluna",
+      "A uma matriz com todas as entradas não nulas"
+    ],
+    e: "O determinante é definido para matrizes quadradas. Para uma matriz retangular, det A não está definido."
+  },
+
+  {
+    p: "O que representa det A?",
+    o: [
+      "Um escalar associado à matriz quadrada A",
+      "Uma matriz com as mesmas dimensões de A",
+      "O número de linhas não nulas de A",
+      "A matriz inversa de A"
+    ],
+    e: "O determinante é um número, também representado por |A|. Não deve ser confundido com a característica ou com a matriz inversa."
+  },
+
+  {
+    p: "Quantos termos aparecem na expressão geral do determinante de uma matriz de ordem n?",
+    o: [
+      String.raw`\(n!\)`,
+      String.raw`\(n^2\)`,
+      String.raw`\(2n\)`,
+      String.raw`\(n+1\)`
+    ],
+    e: "Na definição geral, o determinante de ordem n é uma soma de n! termos, cada um construído a partir de produtos de n elementos com sinais determinados."
+  },
+
+  {
+    p: "Qual é a expressão correta para o determinante de uma matriz 2×2?",
+    o: [
+      String.raw`\(\det A=a_{11}a_{22}-a_{12}a_{21}\)`,
+      String.raw`\(\det A=a_{11}a_{22}+a_{12}a_{21}\)`,
+      String.raw`\(\det A=a_{11}+a_{22}-a_{12}-a_{21}\)`,
+      String.raw`\(\det A=a_{11}a_{12}-a_{21}a_{22}\)`
+    ],
+    e: "O produto da diagonal principal entra com sinal positivo e o produto da diagonal secundária com sinal negativo."
+  },
+
+  {
+    p: "A regra de Sarrus pode ser utilizada diretamente para calcular determinantes de que ordem?",
+    o: [
+      "Ordem 3",
+      "Qualquer ordem",
+      "Ordem 2 apenas",
+      "Apenas matrizes diagonais"
+    ],
+    e: "A regra de Sarrus é um método específico para determinantes 3×3. Não se generaliza diretamente a determinantes de ordem superior."
+  },
+
+  {
+    p: "O que é o menor associado ao elemento aᵢⱼ de uma matriz quadrada?",
+    o: [
+      "O determinante da matriz obtida ao eliminar a linha i e a coluna j",
+      "O menor elemento em valor absoluto da matriz",
+      "O determinante da matriz obtida ao eliminar apenas a linha i",
+      "O produto de aᵢⱼ pela diagonal principal"
+    ],
+    e: "O menor Aᵢⱼ é o determinante de ordem n−1 que resulta de suprimir a linha i e a coluna j da matriz original."
+  },
+
+  {
+    p: "Como se define o complemento algébrico do elemento aᵢⱼ?",
+    o: [
+      String.raw`\(C_{ij}=(-1)^{i+j}A_{ij}\)`,
+      String.raw`\(C_{ij}=A_{ij}+a_{ij}\)`,
+      String.raw`\(C_{ij}=(-1)^i A_{ij}\)`,
+      String.raw`\(C_{ij}=a_{ij}A_{ij}\)`
+    ],
+    e: "O complemento algébrico é o menor multiplicado pelo sinal (−1)^(i+j). O sinal alterna consoante a posição do elemento."
+  },
+
+  {
+    p: "O que afirma o teorema de Laplace?",
+    o: [
+      "O determinante é a soma dos produtos dos elementos de uma linha ou coluna pelos respetivos complementos algébricos",
+      "O determinante é sempre o produto dos elementos da diagonal principal",
+      "O determinante é a soma de todos os elementos da matriz",
+      "O determinante é igual à característica da matriz"
+    ],
+    e: "A expansão de Laplace pode ser feita segundo qualquer linha ou coluna. Cada elemento é multiplicado pelo seu complemento algébrico e os produtos são somados."
+  },
+
+  {
+    p: "Ao aplicar o teorema de Laplace, qual é normalmente a escolha mais conveniente?",
+    o: [
+      "Uma linha ou coluna com o maior número de zeros",
+      "Sempre a primeira linha",
+      "Sempre a diagonal principal",
+      "Uma linha sem elementos nulos"
+    ],
+    e: "Os elementos nulos eliminam termos da expansão. Escolher uma linha ou coluna com muitos zeros reduz o número de determinantes que é necessário calcular."
+  },
+
+  {
+    p: "Se uma matriz quadrada tem uma linha inteira de zeros, quanto vale o seu determinante?",
+    o: [
+      "Zero",
+      "Um",
+      "O produto dos restantes elementos",
+      "Não está definido"
+    ],
+    e: "Pela expansão de Laplace segundo a linha nula, todos os termos são nulos, pelo que det A = 0."
+  },
+
+  {
+    p: "Qual é o determinante de uma matriz triangular?",
+    o: [
+      "O produto dos elementos da diagonal principal",
+      "A soma dos elementos da diagonal principal",
+      "Sempre zero",
+      "O produto de todos os elementos acima da diagonal"
+    ],
+    e: "Numa matriz triangular superior ou inferior, o determinante é o produto dos elementos diagonais. Esta propriedade simplifica bastante o cálculo."
+  },
+
+  {
+    p: "Uma matriz quadrada A tem uma linha nula. Pode ser invertível?",
+    o: [
+      "Não, porque det A = 0",
+      "Sim, desde que os restantes elementos sejam não nulos",
+      "Sim, se for de ordem ímpar",
+      "Depende apenas do número de colunas"
+    ],
+    e: "Uma linha nula implica det A = 0. Uma matriz quadrada é invertível se e só se o seu determinante for diferente de zero."
+  },
+
+  // Propriedades do determinante — linhas
+
+  {
+    p: "O determinante é linear em cada linha, mantendo as restantes linhas fixas. O que significa esta multilinearidade?",
+    o: [
+      "Se uma linha for uma combinação linear de dois vetores, o determinante é a mesma combinação dos determinantes correspondentes",
+      "O determinante de uma soma de matrizes é sempre a soma dos determinantes",
+      "Multiplicar uma linha por um escalar não altera o determinante",
+      "Todas as linhas têm de ser iguais"
+    ],
+    e: "A multilinearidade aplica-se separadamente a cada linha: substituir uma linha por u+v separa o determinante numa soma de dois determinantes, com as restantes linhas inalteradas."
+  },
+
+  {
+    p: "Se multiplicarmos uma única linha de A por um escalar k, o que acontece ao determinante?",
+    o: [
+      "O determinante é multiplicado por k",
+      "O determinante não se altera",
+      "O determinante é multiplicado por k², qualquer que seja a ordem",
+      "O determinante muda sempre de sinal"
+    ],
+    e: "Pela linearidade em cada linha, multiplicar uma linha por k multiplica det A por k. Isto é diferente de multiplicar a matriz inteira por k."
+  },
+
+  {
+    p: "Se multiplicarmos todas as linhas de uma matriz n×n por k, qual é o novo determinante?",
+    o: [
+      String.raw`\(\det(kA)=k^n\det A\)`,
+      String.raw`\(\det(kA)=k\det A\)`,
+      String.raw`\(\det(kA)=n k\det A\)`,
+      String.raw`\(\det(kA)=\det A\)`
+    ],
+    e: "Cada uma das n linhas contribui com um fator k. Multiplicando todos esses fatores, obtém-se kⁿ det A."
+  },
+
+  {
+    p: "O que acontece ao determinante quando se trocam duas linhas de uma matriz?",
+    o: [
+      "O determinante muda de sinal",
+      "O determinante mantém-se sempre igual",
+      "O determinante fica sempre nulo",
+      "O determinante é elevado ao quadrado"
+    ],
+    e: "A troca de duas linhas inverte o sinal do determinante: det A' = −det A."
+  },
+
+  {
+    p: "O que acontece ao determinante se adicionarmos a uma linha um múltiplo de outra linha?",
+    o: [
+      "O determinante mantém-se",
+      "O determinante muda sempre de sinal",
+      "O determinante é multiplicado pelo múltiplo utilizado",
+      "O determinante passa a ser zero"
+    ],
+    e: "A operação Lᵢ → Lᵢ + kLⱼ, com i diferente de j, preserva o determinante. É uma razão pela qual esta operação é útil para simplificar matrizes."
+  },
+
+  {
+    p: "Se duas linhas de uma matriz forem iguais, o que se pode concluir?",
+    o: [
+      "O determinante é zero",
+      "O determinante é um",
+      "A matriz é necessariamente a identidade",
+      "O determinante é igual à soma das linhas"
+    ],
+    e: "Trocar duas linhas iguais não altera a matriz, mas uma troca de linhas inverte o sinal do determinante. Assim, det A = −det A, o que implica det A = 0."
+  },
+
+  {
+    p: "Se duas linhas de uma matriz forem proporcionais, qual é a conclusão?",
+    o: [
+      "O determinante é zero",
+      "O determinante é sempre positivo",
+      "A matriz é necessariamente invertível",
+      "O determinante é igual à constante de proporcionalidade"
+    ],
+    e: "Linhas proporcionais são linearmente dependentes. O determinante de uma matriz quadrada com linhas linearmente dependentes é zero."
+  },
+
+  {
+    p: "Qual das seguintes operações sobre linhas preserva o determinante?",
+    o: [
+      "Adicionar a uma linha um múltiplo de outra linha",
+      "Trocar duas linhas",
+      "Multiplicar uma linha por 3",
+      "Multiplicar uma linha por −1"
+    ],
+    e: "Adicionar a uma linha um múltiplo de outra linha preserva o determinante. Trocar linhas muda o sinal; multiplicar uma linha por k multiplica o determinante por k."
+  },
+
+  {
+    p: "Se det A = 5 e trocarmos duas linhas de A, qual é o novo determinante?",
+    o: [
+      "−5",
+      "5",
+      "0",
+      "25"
+    ],
+    e: "Uma única troca de linhas inverte o sinal do determinante. O novo determinante é −5."
+  },
+
+  {
+    p: "Se det A = 4 e multiplicarmos uma única linha por 3, qual será o determinante da nova matriz?",
+    o: [
+      "12",
+      "4",
+      "36",
+      "−12"
+    ],
+    e: "Multiplicar uma linha por 3 multiplica o determinante por 3. Portanto, o novo determinante é 3 × 4 = 12."
+  },
+
+  // Propriedades gerais dos determinantes
+
+  {
+    p: "Qual é o determinante da matriz identidade Iₙ?",
+    o: [
+      "1",
+      "0",
+      "n",
+      "Depende da ordem n"
+    ],
+    e: "A identidade é triangular, com todos os elementos da diagonal principal iguais a 1. O seu determinante é o produto desses elementos: det Iₙ = 1."
+  },
+
+  {
+    p: "Qual é a propriedade do determinante relativamente à transposta?",
+    o: [
+      String.raw`\(\det(A^T)=\det A\)`,
+      String.raw`\(\det(A^T)=-\det A\)`,
+      String.raw`\(\det(A^T)=(\det A)^2\)`,
+      String.raw`\(\det(A^T)=1/\det A\)`
+    ],
+    e: "A transposição troca linhas por colunas, mas não altera o determinante."
+  },
+
+  {
+    p: "Qual é a relação entre o determinante de um produto AB e os determinantes de A e B?",
+    o: [
+      String.raw`\(\det(AB)=\det A\,\det B\)`,
+      String.raw`\(\det(AB)=\det A+\det B\)`,
+      String.raw`\(\det(AB)=\det A-\det B\)`,
+      String.raw`\(\det(AB)=\det A/\det B\)` 
+    ],
+    e: "Para matrizes quadradas da mesma ordem, o determinante é multiplicativo: det(AB) = det A det B."
+  },
+
+  {
+    p: "Se A e B são matrizes quadradas da mesma ordem, qual é a relação entre det(AB) e det(BA)?",
+    o: [
+      String.raw`\(\det(AB)=\det(BA)\)`,
+      String.raw`\(\det(AB)=-\det(BA)\)`,
+      "Não existe qualquer relação geral",
+      String.raw`\(\det(AB)=\det A+\det B\)`
+    ],
+    e: "Ambos os determinantes são iguais a det A det B. Isto não significa que AB = BA como matrizes; os produtos podem ser diferentes."
+  },
+
+  {
+    p: "Se det A = 0, o que se pode concluir sobre A, sendo A quadrada?",
+    o: [
+      "A não é invertível",
+      "A é necessariamente a matriz nula",
+      "A é invertível",
+      "A é necessariamente triangular"
+    ],
+    e: "Uma matriz quadrada é invertível se e só se det A ≠ 0. Determinante nulo implica matriz singular, mas não implica que todos os elementos sejam nulos."
+  },
+
+  {
+    p: "Se det A ≠ 0, qual das afirmações é necessariamente verdadeira?",
+    o: [
+      "A é invertível e tem característica máxima",
+      "A tem pelo menos uma linha nula",
+      "A não tem inversa",
+      "A tem duas linhas iguais"
+    ],
+    e: "Para uma matriz quadrada de ordem n, det A ≠ 0 equivale a A ser invertível e a car A = n."
+  },
+
+  {
+    p: "Se det A = 0, qual das afirmações é necessariamente verdadeira?",
+    o: [
+      "As linhas ou colunas de A são linearmente dependentes",
+      "Todos os elementos de A são zero",
+      "A é a matriz identidade",
+      "Todas as linhas de A são iguais"
+    ],
+    e: "Um determinante nulo indica dependência linear das linhas e das colunas. Não é necessário que uma linha seja nula ou que duas linhas sejam iguais."
+  },
+
+  {
+    p: "Se A é uma matriz quadrada de ordem n, qual é a relação correta entre o determinante e a inversa?",
+    o: [
+      String.raw`\(\det(A^{-1})=1/\det A\)`,
+      String.raw`\(\det(A^{-1})=\det A\)`,
+      String.raw`\(\det(A^{-1})=-\det A\)`,
+      String.raw`\(\det(A^{-1})=(\det A)^2\)`
+    ],
+    e: "Esta propriedade pressupõe que A é invertível. Como AA⁻¹ = I, temos det A det(A⁻¹) = det I = 1."
+  },
+
+  {
+    p: "Se A e B são matrizes quadradas da mesma ordem e ambas são invertíveis, o que se pode afirmar sobre AB?",
+    o: [
+      "AB é invertível",
+      "AB nunca é invertível",
+      "AB só é invertível se A = B",
+      "AB é invertível apenas se A e B forem diagonais"
+    ],
+    e: "O produto de matrizes invertíveis é invertível. A sua inversa é B⁻¹A⁻¹, pela ordem inversa dos fatores."
+  },
+
+  // Propriedades da matriz inversa
+
+  {
+    p: "Qual é a definição de inversa de uma matriz quadrada A?",
+    o: [
+      "Uma matriz A⁻¹ tal que AA⁻¹ = A⁻¹A = I",
+      "Uma matriz A⁻¹ tal que A + A⁻¹ = I",
+      "A transposta de A",
+      "Uma matriz que satisfaz A⁻¹A = 0"
+    ],
+    e: "A inversa é definida por ambos os produtos, à esquerda e à direita, serem iguais à identidade."
+  },
+
+  {
+    p: "Uma matriz invertível pode ter mais do que uma inversa?",
+    o: [
+      "Não. A inversa é única",
+      "Sim, uma para cada linha",
+      "Sim, desde que os determinantes sejam iguais",
+      "Sim, mas apenas para matrizes de ordem 2"
+    ],
+    e: "A inversa de uma matriz, quando existe, é única."
+  },
+
+  {
+    p: "Qual é a inversa do produto AB, assumindo que A e B são invertíveis?",
+    o: [
+      String.raw`\((AB)^{-1}=B^{-1}A^{-1}\)`,
+      String.raw`\((AB)^{-1}=A^{-1}B^{-1}\)`,
+      String.raw`\((AB)^{-1}=AB\)`,
+      String.raw`\((AB)^{-1}=A^{-1}+B^{-1}\)`
+    ],
+    e: "A ordem inverte-se. De facto, (AB)(B⁻¹A⁻¹) = A(BB⁻¹)A⁻¹ = I. Em geral, A⁻¹B⁻¹ não é a inversa de AB."
+  },
+
+  {
+    p: "Qual é a relação entre a inversa da transposta e a transposta da inversa?",
+    o: [
+      String.raw`\((A^T)^{-1}=(A^{-1})^T\)`,
+      String.raw`\((A^T)^{-1}=A^{-1}\)`,
+      String.raw`\((A^T)^{-1}=A^T\)`,
+      String.raw`\((A^T)^{-1}=-(A^{-1})^T\)`
+    ],
+    e: "Se A é invertível, a transposta da sua inversa é a inversa da transposta."
+  },
+
+  {
+    p: "Se A é invertível, qual é a inversa de A⁻¹?",
+    o: [
+      String.raw`\((A^{-1})^{-1}=A\)`,
+      String.raw`\((A^{-1})^{-1}=A^{-1}\)`,
+      String.raw`\((A^{-1})^{-1}=A^T\)`,
+      String.raw`\((A^{-1})^{-1}=I\)`
+    ],
+    e: "Como A⁻¹A = AA⁻¹ = I, a matriz A é a inversa de A⁻¹."
+  },
+
+  {
+    p: "Se A é invertível e k ≠ 0, qual é a inversa de kA?",
+    o: [
+      String.raw`\((kA)^{-1}=k^{-1}A^{-1}\)`,
+      String.raw`\((kA)^{-1}=kA^{-1}\)`,
+      String.raw`\((kA)^{-1}=A^{-1}\)`,
+      String.raw`\((kA)^{-1}=k^{-1}A\)`
+    ],
+    e: "O fator escalar tem de ser invertido. Multiplicando kA por k⁻¹A⁻¹ obtém-se a identidade."
+  },
+
+  {
+    p: "Se A e B são invertíveis, qual é a inversa de A⁻¹B?",
+    o: [
+      String.raw`\((A^{-1}B)^{-1}=B^{-1}A\)`,
+      String.raw`\((A^{-1}B)^{-1}=AB^{-1}\)`,
+      String.raw`\((A^{-1}B)^{-1}=A^{-1}B^{-1}\)`,
+      String.raw`\((A^{-1}B)^{-1}=BA^{-1}\)`
+    ],
+    e: "Aplica-se a regra da inversa de um produto: (XY)⁻¹ = Y⁻¹X⁻¹. Aqui X = A⁻¹ e Y = B, pelo que o resultado é B⁻¹A."
+  },
+
+  {
+    p: "Se A e B são invertíveis, qual das afirmações é verdadeira?",
+    o: [
+      String.raw`\(A^{-1}B^{-1}=(BA)^{-1}\)`,
+      String.raw`\(A^{-1}B^{-1}=(AB)^{-1}\)`,
+      String.raw`\(A^{-1}B^{-1}=AB\)`,
+      String.raw`\(A^{-1}B^{-1}=A+B\)`
+    ],
+    e: "A inversa de BA é A⁻¹B⁻¹, porque a ordem dos fatores se inverte ao calcular a inversa de um produto."
+  },
+
+  {
+    p: "Se A é uma matriz quadrada invertível, qual é o determinante de A⁻¹?",
+    o: [
+      String.raw`\(\det(A^{-1})=1/\det A\)`,
+      String.raw`\(\det(A^{-1})=\det A\)`,
+      String.raw`\(\det(A^{-1})=-\det A\)`,
+      String.raw`\(\det(A^{-1})=0\)`
+    ],
+    e: "Como det(AA⁻¹) = det I = 1, segue-se que det A det(A⁻¹) = 1."
+  },
+
+  {
+    p: "Se A é invertível, o que se pode afirmar sobre a sua transposta Aᵀ?",
+    o: [
+      "Aᵀ também é invertível",
+      "Aᵀ nunca é invertível",
+      "Aᵀ só é invertível se A for simétrica",
+      "Aᵀ só é invertível se det A = 1"
+    ],
+    e: "Como det(Aᵀ) = det A e det A ≠ 0, a transposta também tem determinante não nulo e é invertível."
+  },
+
+  {
+    p: "Se A e B são invertíveis, qual é a relação entre det(AB) e det A?",
+    o: [
+      String.raw`\(\det(AB)=\det A\det B\)`,
+      String.raw`\(\det(AB)=\det A+\det B\)`,
+      String.raw`\(\det(AB)=\det A-\det B\)`,
+      String.raw`\(\det(AB)=\det A/\det B\)`
+    ],
+    e: "A multiplicatividade do determinante aplica-se quer as matrizes sejam invertíveis ou não. A invertibilidade garante apenas que ambos os determinantes são não nulos."
+  },
+
+  // 3.5 — Regra de Cramer
+
+  {
+    p: "Em que condição se pode aplicar a regra de Cramer a um sistema quadrado AX = B?",
+    o: [
+      String.raw`\(\det A\ne0\)`,
+      String.raw`\(\det A=0\)`,
+      String.raw`\(\det B\ne0\)`,
+      "A matriz B tem de ser quadrada"
+    ],
+    e: "A regra de Cramer aplica-se a sistemas cuja matriz dos coeficientes é invertível, isto é, com determinante diferente de zero."
+  },
+
+  {
+    p: "Na regra de Cramer, qual é o denominador da expressão que determina cada incógnita?",
+    o: [
+      String.raw`\(\det A\)`,
+      String.raw`\(\det B\)`,
+      String.raw`\(\det A^{-1}\)`,
+      String.raw`\(\det(A+B)\)`
+    ],
+    e: "Cada incógnita é o quociente de um determinante pelo determinante da matriz dos coeficientes A."
+  },
+
+  {
+    p: "Como se constrói o numerador da expressão de Cramer para a incógnita xᵢ?",
+    o: [
+      "Substitui-se a coluna i de A pelo vetor dos termos independentes B e calcula-se o determinante",
+      "Substitui-se a linha i de A por uma linha nula",
+      "Substitui-se toda a matriz A pela identidade",
+      "Calcula-se o determinante de A⁻¹"
+    ],
+    e: "O determinante do numerador é obtido substituindo a coluna dos coeficientes da incógnita em questão pelos termos independentes."
+  },
+
+  {
+    p: "Qual é uma limitação importante da regra de Cramer?",
+    o: [
+      "Exige uma matriz dos coeficientes quadrada e invertível",
+      "Só funciona para sistemas com duas incógnitas",
+      "Só funciona quando todos os coeficientes são positivos",
+      "Só funciona quando a matriz dos coeficientes é triangular"
+    ],
+    e: "A regra de Cramer requer um sistema quadrado e det A ≠ 0. Não se aplica diretamente a sistemas retangulares nem a sistemas com matriz dos coeficientes singular."
+  }
+
+];
+
+
+const $ = id => document.getElementById(id);
+
+function shuffle(a) {
+  const r = a.slice();
+  for (let i = r.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [r[i], r[j]] = [r[j], r[i]];
+  }
+  return r;
+}
+
+let queue = [];
+let idx = 0;
+let score = 0;
+let wrong = [];
+let locked = false;
+let current = [];
+
+function show(name) {
+  $('quiz').hidden = name !== 'quiz';
+  $('result').hidden = name !== 'result';
+  window.scrollTo(0, 0);
+}
+
+function typeset() {
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise();
+  }
+}
+
+function start(list, shuffleQuestions) {
+  queue = shuffleQuestions ? shuffle(list) : list.slice();
+  idx = 0;
+  score = 0;
+  wrong = [];
+  show('quiz');
+  render();
+}
+
+function render() {
+  const q = queue[idx];
+  locked = false;
+
+  $('count').textContent = 'Pergunta ' + (idx + 1) + ' de ' + queue.length;
+  $('score').textContent = 'Certas: ' + score;
+  $('bar').style.width = (idx / queue.length * 100) + '%';
+  $('prompt').innerHTML = q.p;
+
+  current = shuffle(q.o.map((t, k) => ({ t, ok: k === 0 })));
+
+  const box = $('options');
+  box.textContent = '';
+
+  current.forEach((o, k) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'opt';
+
+    const L = document.createElement('span');
+    L.className = 'letter';
+    L.textContent = 'ABCD'[k];
+
+    const T = document.createElement('span');
+    T.className = 'otext';
+    T.innerHTML = o.t;
+
+    const M = document.createElement('span');
+    M.className = 'mark';
+    M.setAttribute('aria-hidden', 'true');
+
+    b.append(L, T, M);
+    b.addEventListener('click', () => answer(k));
+    box.appendChild(b);
+  });
+
+  $('feedback').hidden = true;
+  typeset();
+}
+
+function answer(k) {
+  if (locked) return;
+  locked = true;
+
+  const q = queue[idx];
+  const box = $('options');
+  const chosen = current[k];
+
+  current.forEach((o, n) => {
+    const btn = box.children[n];
+    btn.disabled = true;
+
+    if (o.ok) {
+      btn.classList.add('ok');
+      btn.querySelector('.mark').textContent = '✓';
+    } else if (n === k) {
+      btn.classList.add('bad');
+      btn.querySelector('.mark').textContent = '✗';
+    }
+  });
+
+  if (chosen.ok) {
+    score++;
+  } else {
+    wrong.push({ q, chosen: chosen.t });
+  }
+
+  $('score').textContent = 'Certas: ' + score;
+  $('verdict').textContent = chosen.ok ? 'Certo.' : 'Não é essa.';
+  $('explain').innerHTML = q.e;
+  $('next').textContent = idx === queue.length - 1 ? 'Ver resultado' : 'Seguinte';
+  $('feedback').hidden = false;
+  $('bar').style.width = ((idx + 1) / queue.length * 100) + '%';
+
+  typeset();
+  $('next').focus();
+}
+
+function next() {
+  idx++;
+  if (idx >= queue.length) finish();
+  else render();
+}
+
+function finish() {
+  show('result');
+
+  const total = queue.length;
+  $('final').textContent = score + ' de ' + total;
+
+  const pct = score / total;
+  $('finalMsg').textContent = wrong.length === 0
+    ? 'Tudo certo.'
+    : pct >= 0.75
+      ? 'Bom resultado. Revê as perguntas que falhaste.'
+      : 'Vale a pena rever os apontamentos e refazer as perguntas que falhaste.';
+
+  $('retryWrong').hidden = wrong.length === 0;
+
+  const rev = $('review');
+  rev.textContent = '';
+
+  if (wrong.length) {
+    const h = document.createElement('h3');
+    h.textContent = 'Perguntas falhadas';
+    rev.appendChild(h);
+
+    wrong.forEach(w => {
+      const d = document.createElement('div');
+      d.className = 'rev-item';
+
+      const p = document.createElement('p');
+      p.innerHTML = w.q.p;
+      p.style.fontWeight = '600';
+
+      const y = document.createElement('p');
+      y.className = 'you';
+      y.innerHTML = '✗ A tua resposta: ' + w.chosen;
+
+      const r = document.createElement('p');
+      r.className = 'right';
+      r.innerHTML = '✓ Resposta certa: ' + w.q.o[0];
+
+      d.append(p, y, r);
+      rev.appendChild(d);
+    });
+
+    typeset();
+  }
+}
+
+$('next').addEventListener('click', next);
+$('restart').addEventListener('click', () => start(Q, true));
+$('retryWrong').addEventListener('click', () => start(wrong.map(w => w.q), false));
+
+document.addEventListener('keydown', e => {
+  if ($('quiz').hidden || locked) return;
+  const k = ['1', '2', '3', '4'].indexOf(e.key);
+  if (k >= 0 && k < current.length) answer(k);
+});
+
+start(Q, false);
+
+</script>
+</body>
+</html>
