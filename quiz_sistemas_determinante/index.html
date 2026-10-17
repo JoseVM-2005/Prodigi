@@ -310,11 +310,11 @@ const Q = [
   },
 
   {
-    p: "Considere um sistema AX = B com n incógnitas. Qual é o critério para o sistema ser possível e determinado?",
+    p: "Considere um sistema AX = b com n incógnitas. Qual é o critério para o sistema ser possível e determinado?",
     o: [
-      "car A = car[A|B] = n",
-      "car A < car[A|B]",
-      "car A = car[A|B] < n",
+      "car A = car[A|b] = n",
+      "car A < car[A|b]",
+      "car A = car[A|b] < n",
       "det A = 0, independentemente das dimensões"
     ],
     e: "O sistema tem uma única solução se e só se a característica da matriz dos coeficientes e a da matriz completa forem ambas iguais ao número n de incógnitas."
@@ -424,8 +424,8 @@ const Q = [
   {
     p: "Se A é invertível, qual é a solução do sistema AX = B?",
     o: [
+      String.raw`\(X=BA^{-1}\)`,
       String.raw`\(X=A^{-1}B\)`,
-      String.raw`\(X=AB^{-1}\)`,
       String.raw`\(X=A^TB\)`,
       String.raw`\(X=B^{-1}A\)`
     ],
@@ -880,16 +880,7 @@ const Q = [
     e: "A inversa de BA é A⁻¹B⁻¹, porque a ordem dos fatores se inverte ao calcular a inversa de um produto."
   },
 
-  {
-    p: "Se A é uma matriz quadrada invertível, qual é o determinante de A⁻¹?",
-    o: [
-      String.raw`\(\det(A^{-1})=1/\det A\)`,
-      String.raw`\(\det(A^{-1})=\det A\)`,
-      String.raw`\(\det(A^{-1})=-\det A\)`,
-      String.raw`\(\det(A^{-1})=0\)`
-    ],
-    e: "Como det(AA⁻¹) = det I = 1, segue-se que det A det(A⁻¹) = 1."
-  },
+
 
   {
     p: "Se A é invertível, o que se pode afirmar sobre a sua transposta Aᵀ?",
@@ -902,16 +893,6 @@ const Q = [
     e: "Como det(Aᵀ) = det A e det A ≠ 0, a transposta também tem determinante não nulo e é invertível."
   },
 
-  {
-    p: "Se A e B são invertíveis, qual é a relação entre det(AB) e det A?",
-    o: [
-      String.raw`\(\det(AB)=\det A\det B\)`,
-      String.raw`\(\det(AB)=\det A+\det B\)`,
-      String.raw`\(\det(AB)=\det A-\det B\)`,
-      String.raw`\(\det(AB)=\det A/\det B\)`
-    ],
-    e: "A multiplicatividade do determinante aplica-se quer as matrizes sejam invertíveis ou não. A invertibilidade garante apenas que ambos os determinantes são não nulos."
-  },
 
   // 3.5 — Regra de Cramer
 
@@ -1142,7 +1123,7 @@ document.addEventListener('keydown', e => {
   if (k >= 0 && k < current.length) answer(k);
 });
 
-start(Q, false);
+start(Q, true);
 
 </script>
 </body>
